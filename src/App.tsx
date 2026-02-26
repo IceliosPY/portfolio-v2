@@ -1,4 +1,5 @@
 import AppLayout from "./app/layout/AppLayout";
+import PinnedProjects from "./components/sections/PinnedProjects";
 
 export default function App() {
   return (
@@ -12,8 +13,12 @@ export default function App() {
           </p>
           <div className="divider" />
           <div className="row">
-            <a className="btn primary" href="#projets">Voir les projets</a>
-            <a className="btn" href="#docs">CV</a>
+            <a className="btn primary" href="#projets">
+              Voir les projets
+            </a>
+            <a className="btn" href="#docs">
+              CV
+            </a>
           </div>
         </aside>
 
@@ -31,20 +36,16 @@ export default function App() {
 
           <div className="divider" />
 
-          <div id="projets" className="badge">Projets épinglés</div>
-          <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
-            <div className="card">
-              <strong>TransfemEra</strong>
-              <div className="small">Plateforme web (API, rôles, DB, contenu).</div>
-            </div>
-            <div className="card">
-              <strong>Portfolio V2</strong>
-              <div className="small">React/TS + export DB → JSON + GitHub Pages.</div>
-            </div>
+          {/* Projets épinglés (dynamiques via JSON généré par GitHub Actions) */}
+          <div id="projets" style={{ marginTop: 12 }}>
+            <PinnedProjects />
           </div>
 
           <div className="divider" />
-          <div id="skills" className="badge">Skills</div>
+
+          <div id="skills" className="badge">
+            Skills
+          </div>
           <div className="row" style={{ marginTop: 12 }}>
             <span className="badge">Frontend</span>
             <span className="badge">Backend</span>
@@ -53,9 +54,14 @@ export default function App() {
           </div>
 
           <div className="divider" />
-          <div id="docs" className="badge">Documents</div>
+
+          <div id="docs" className="badge">
+            Documents
+          </div>
           <div className="row" style={{ marginTop: 12 }}>
-            <a className="btn" href="/assets/docs/CV.pdf">CV</a>
+            <a className="btn" href="/assets/docs/CV.pdf">
+              CV
+            </a>
           </div>
         </section>
       </section>

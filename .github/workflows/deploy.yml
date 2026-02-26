@@ -5,20 +5,21 @@ on:
     branches: [ main ]
   workflow_dispatch:
   schedule:
-    - cron: "0 */12 * * *"
+    - cron: "*/10 * * * *"
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,14 +30,13 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install
+      - name: Install deps
         run: npm ci
 
-      - name: Generate pinned JSON
+      - name: Generate pinned data (GraphQL)
+        run: node scripts/generate-pinned.mjs
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GH_USERNAME: IceliosPY
-        run: node scripts/generate-pinned.mjs
 
       - name: Build
         run: npm run build
@@ -55,6 +55,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy
         id: deployment
