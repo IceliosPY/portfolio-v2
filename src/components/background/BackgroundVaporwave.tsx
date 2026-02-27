@@ -3,6 +3,68 @@ import * as THREE from "three";
 
 type Props = { enabled?: boolean };
 
+function makeGridTexture({
+  size = 512,
+  majorEvery = 8,
+  minorAlpha = 0.18,
+  majorAlpha = 0.35,
+  color = "#ff2a55",
+  glow = 1,
+}: {
+  size?: number;
+  majorEvery?: number;
+  minorAlpha?: number;
+  majorAlpha?: number;
+  color?: string;
+  glow?: number;
+}) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+
+  const ctx = canvas.getContext("2d")!;
+  ctx.clearRect(0, 0, size, size);
+
+  const cells = 64;
+  const step = size / cells;
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+
+  if (glow > 0) {
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 4;
+  }
+
+  for (let i = 0; i <= cells; i++) {
+    const isMajor = i % majorEvery === 0;
+    ctx.globalAlpha = isMajor ? majorAlpha : minorAlpha;
+
+    const p = i * step + 0.5;
+
+    ctx.beginPath();
+    ctx.moveTo(p, 0);
+    ctx.lineTo(p, size);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, p);
+    ctx.lineTo(size, p);
+    ctx.stroke();
+  }
+
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.anisotropy = 6;
+  tex.colorSpace = THREE.SRGBColorSpace;
+
+  return tex;
+}
+
 export default function BackgroundVaporwave({ enabled = true }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
@@ -17,7 +79,9 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
     const animateAllowed = !prefersReduced;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x07080b, 10, 55);
+
+    // Fog un peu moins agressive pour mieux voir les montagnes
+    scene.fog = new THREE.Fog(0x07080b, 14, 70);
 
     const camera = new THREE.PerspectiveCamera(
       55,
@@ -34,33 +98,57 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     host.appendChild(renderer.domElement);
 
-    const amb = new THREE.AmbientLight(0xffffff, 0.35);
+    // ===== Lights un peu renforcées
+    const amb = new THREE.AmbientLight(0xffffff, 0.45);
     scene.add(amb);
 
-    const dir = new THREE.DirectionalLight(0xff2a55, 0.35);
+    const dir = new THREE.DirectionalLight(0xff2a55, 0.45);
     dir.position.set(4, 8, 6);
     scene.add(dir);
 
-    // grille
-    const grid = new THREE.GridHelper(220, 60, 0xff2a55, 0xff2a55);
-    (grid.material as THREE.Material).transparent = true;
-    (grid.material as THREE.Material).opacity = 0.35;
-    grid.position.y = -0.2;
-    scene.add(grid);
+    // ========= GRILLE =========
+    const gridTex = makeGridTexture({
+      minorAlpha: 0.18,  // + visible
+      majorAlpha: 0.42,  // + visible
+      glow: 1,
+    });
 
-    // sol sombre sous la grille
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(220, 220, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0x05060a, transparent: true, opacity: 0.7 })
+    gridTex.repeat.set(10, 18);
+
+    const floorGeo = new THREE.PlaneGeometry(220, 220, 1, 1);
+
+    // fond moins sombre
+    const floorBase = new THREE.Mesh(
+      floorGeo,
+      new THREE.MeshBasicMaterial({
+        color: 0x05060a,
+        transparent: true,
+        opacity: 0.62, // avant 0.68
+      })
     );
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -0.21;
-    scene.add(floor);
+    floorBase.rotation.x = -Math.PI / 2;
+    floorBase.position.y = -0.21;
+    scene.add(floorBase);
 
-    // montagnes low-poly wireframe (bords)
+    const floorGrid = new THREE.Mesh(
+      floorGeo,
+      new THREE.MeshBasicMaterial({
+        map: gridTex,
+        transparent: true,
+        opacity: 0.98, // presque plein
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    floorGrid.rotation.x = -Math.PI / 2;
+    floorGrid.position.y = -0.20;
+    scene.add(floorGrid);
+
+    // ========= MONTAGNES plus visibles =========
     function makeMountains(side: -1 | 1) {
       const geo = new THREE.PlaneGeometry(80, 30, 40, 10);
       const pos = geo.attributes.position;
+
       for (let i = 0; i < pos.count; i++) {
         const x = pos.getX(i);
         const y = pos.getY(i);
@@ -75,24 +163,27 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
         color: 0xff2a55,
         wireframe: true,
         transparent: true,
-        opacity: 0.18,
+        opacity: 0.28, // avant 0.18 → beaucoup plus lisible
       });
 
       const mesh = new THREE.Mesh(geo, mat);
       mesh.rotation.x = -Math.PI / 2;
       mesh.position.set(side * 55, -0.18, -25);
       mesh.rotation.z = side === 1 ? 0.18 : -0.18;
-      return mesh;
+
+      return { mesh, geo, mat };
     }
 
     const m1 = makeMountains(-1);
     const m2 = makeMountains(1);
-    scene.add(m1, m2);
+    scene.add(m1.mesh, m2.mesh);
 
+    // ========= LOOP =========
     let t0 = performance.now();
-    let scroll = 0;
     const targetFps = 45;
     const frameMin = 1000 / targetFps;
+
+    let v = 0;
 
     const onResize = () => {
       camera.aspect = host.clientWidth / host.clientHeight;
@@ -120,14 +211,13 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
       if (dt >= frameMin) {
         t0 = now - (dt % frameMin);
 
-        // travelling : la grille avance vers toi
-        scroll += 0.055;
-        grid.position.z = (scroll % 6) * 1.0;
+        v += 0.00135;
+        if (v > 1000) v -= 1000;
+        gridTex.offset.y = v;
 
-        // respiration légère des montagnes
         const breathe = Math.sin(now * 0.0006) * 0.04;
-        m1.position.y = -0.18 + breathe;
-        m2.position.y = -0.18 - breathe;
+        m1.mesh.position.y = -0.18 + breathe;
+        m2.mesh.position.y = -0.18 - breathe;
 
         renderer.render(scene, camera);
       }
@@ -140,9 +230,25 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMouseMove);
-      host.removeChild(renderer.domElement);
+
+      if (renderer.domElement.parentElement === host) {
+        host.removeChild(renderer.domElement);
+      }
+
+      floorGeo.dispose();
+      (floorBase.material as THREE.Material).dispose();
+      (floorGrid.material as THREE.Material).dispose();
+
+      gridTex.dispose();
+
+      m1.geo.dispose();
+      m1.mat.dispose();
+      m2.geo.dispose();
+      m2.mat.dispose();
+
       renderer.dispose();
     };
   }, [enabled]);
