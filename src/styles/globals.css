@@ -450,3 +450,73 @@ button{ font: inherit; }
     background: linear-gradient(90deg, var(--accent), transparent);
     opacity:.9;
   }
+
+  /* centre la pile de sections */
+.center-stack{
+  max-width: 920px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+/* HERO plus “pro” */
+.hero-card{
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+.hero-actions{
+  margin-top: 14px;
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-icons{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+/* boutons icônes */
+.icon-btn{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.05);
+  transition: transform 120ms ease, background 160ms ease, border 160ms ease;
+}
+.icon-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,42,85,0.28);
+}
+
+.icon{
+  width: 20px;
+  height: 20px;
+  color: rgba(245,247,250,0.88);
+}
+
+/* header: groupe icônes */
+.nav-icons{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+}
+
+/* skills en mini grille */
+.skills-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 720px){
+  .skills-grid{ grid-template-columns: 1fr; }
+  .center-stack{ max-width: 720px; }
+}
