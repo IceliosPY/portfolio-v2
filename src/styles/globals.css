@@ -520,3 +520,99 @@ button{ font: inherit; }
   .skills-grid{ grid-template-columns: 1fr; }
   .center-stack{ max-width: 720px; }
 }
+
+/* Accessibilité */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Bouton “icône” dans la nav */
+.icon-btn{
+  height: 38px;
+  width: 40px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 120ms ease, background 160ms ease, border 160ms ease;
+}
+.icon-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.16);
+}
+
+/* Petit “point” pour représenter “réseaux” (tu peux remplacer par un vrai icon si tu veux) */
+.icon-btn-dot{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255,42,85,0.18);
+  border: 1px solid rgba(255,42,85,0.35);
+  box-shadow: 0 0 18px rgba(255,42,85,0.15);
+}
+
+/* Dropdown hover */
+.nav-social{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.social-pop{
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 170px;
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(12,12,16,0.70);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+/* Affiche au hover + au focus clavier */
+.nav-social:hover .social-pop,
+.nav-social:focus-within .social-pop{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.social-item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  color: var(--text);
+}
+
+.social-item span{
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.social-item:hover{
+  background: rgba(255,255,255,0.06);
+}
+
+.social-item:hover span{
+  color: var(--text);
+}
