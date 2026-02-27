@@ -1,7 +1,9 @@
-import AppLayout from "./app/layout/AppLayout";
-import PinnedProjects from "./components/sections/PinnedProjects";
+import AppLayout from "./layout/AppLayout";
+import PinnedProjects from "../components/pinned/PinnedProjects";
 
 export default function App() {
+  const cvUrl = `${import.meta.env.BASE_URL}docs/CV.pdf`;
+
   return (
     <AppLayout>
       <section className="grid">
@@ -30,13 +32,17 @@ export default function App() {
 
           <div className="row">
             <button className="btn primary">Me contacter</button>
-            <button className="btn">GitHub</button>
-            <button className="btn">LinkedIn</button>
+            <a className="btn" href="https://github.com/IceliosPY" target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+            <a className="btn" href="#" target="_blank" rel="noreferrer">
+              LinkedIn
+            </a>
           </div>
 
           <div className="divider" />
 
-          {/* Projets épinglés (dynamiques via JSON généré par GitHub Actions) */}
+          {/* Projets épinglés */}
           <div id="projets" style={{ marginTop: 12 }}>
             <PinnedProjects />
           </div>
@@ -59,7 +65,7 @@ export default function App() {
             Documents
           </div>
           <div className="row" style={{ marginTop: 12 }}>
-            <a className="btn" href="/assets/docs/CV.pdf">
+            <a className="btn" href={cvUrl} target="_blank" rel="noreferrer">
               CV
             </a>
           </div>
