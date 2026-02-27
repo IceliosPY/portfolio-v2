@@ -253,3 +253,200 @@ button{ font: inherit; }
   font-size: 13px;
   color: var(--muted);
 }
+
+/* =========================================================
+   Vaporwave Micro-interactions (Mood B)
+   Colle à la fin de component.css (recommandé)
+   ========================================================= */
+
+   :root{
+    --ease-out: cubic-bezier(.22,.61,.36,1);
+    --glow: rgba(255,42,85,.22);
+    --glow-strong: rgba(255,42,85,.35);
+    --stroke-hot: rgba(255,42,85,.38);
+    --stroke-hot-2: rgba(255,90,122,.26);
+  }
+  
+  /* accessibilité */
+  @media (prefers-reduced-motion: reduce){
+    .card, .btn, .nav-links a { transition: none !important; }
+    .card::before, .card::after { animation: none !important; }
+  }
+  
+  /* -----------------------------
+     NAV : underline néon + hover
+  -------------------------------- */
+  .nav-links a{
+    position: relative;
+    transition: color 180ms var(--ease-out), background 180ms var(--ease-out);
+  }
+  
+  .nav-links a::after{
+    content:"";
+    position:absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 6px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transform: scaleX(.65);
+    transition: opacity 180ms var(--ease-out), transform 220ms var(--ease-out);
+  }
+  
+  .nav-links a:hover{
+    color: var(--text);
+    background: rgba(255,255,255,0.05);
+  }
+  
+  .nav-links a:hover::after{
+    opacity: .95;
+    transform: scaleX(1);
+  }
+  
+  /* -----------------------------
+     BUTTONS : glow + press
+  -------------------------------- */
+  .btn{
+    position: relative;
+    transition:
+      transform 160ms var(--ease-out),
+      background 180ms var(--ease-out),
+      border-color 180ms var(--ease-out),
+      box-shadow 180ms var(--ease-out);
+  }
+  
+  .btn:hover{
+    box-shadow:
+      0 10px 30px rgba(0,0,0,.35),
+      0 0 22px rgba(255,255,255,.06);
+  }
+  
+  .btn.primary:hover{
+    box-shadow:
+      0 12px 34px rgba(0,0,0,.40),
+      0 0 26px var(--glow),
+      0 0 55px rgba(255,42,85,.12);
+  }
+  
+  .btn:active{
+    transform: translateY(1px) scale(.985);
+  }
+  
+  /* petit "sheen" (reflet) discret sur hover */
+  .btn::after{
+    content:"";
+    position:absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.08) 35%, transparent 60%);
+    opacity: 0;
+    transform: translateX(-12%);
+    transition: opacity 180ms var(--ease-out), transform 320ms var(--ease-out);
+    pointer-events: none;
+  }
+  
+  .btn:hover::after{
+    opacity: .9;
+    transform: translateX(12%);
+  }
+  
+  /* -----------------------------
+     CARDS : lift + neon edge + sheen
+  -------------------------------- */
+  .card{
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 220ms var(--ease-out),
+      border-color 220ms var(--ease-out),
+      background 220ms var(--ease-out),
+      box-shadow 240ms var(--ease-out),
+      filter 220ms var(--ease-out);
+  }
+  
+  /* halo externe (glow) */
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    border-radius: inherit;
+    background: radial-gradient(600px 240px at 30% 10%, rgba(255,42,85,.22), transparent 55%),
+                radial-gradient(520px 260px at 80% 30%, rgba(255,90,122,.16), transparent 60%);
+    opacity: 0;
+    transition: opacity 240ms var(--ease-out);
+    pointer-events:none;
+  }
+  
+  /* sheen (reflet) qui passe */
+  .card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius: inherit;
+    background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.09) 35%, transparent 60%);
+    opacity: 0;
+    transform: translateX(-18%);
+    transition: opacity 180ms var(--ease-out), transform 360ms var(--ease-out);
+    pointer-events:none;
+  }
+  
+  .card:hover{
+    transform: translateY(-6px) scale(1.012);
+    border-color: var(--stroke-hot);
+    background: rgba(0,0,0,0.22);
+    box-shadow:
+      0 22px 60px rgba(0,0,0,.55),
+      0 0 26px var(--glow),
+      0 0 90px rgba(255,42,85,.10);
+    filter: saturate(1.05);
+  }
+  
+  .card:hover::before{
+    opacity: 1;
+  }
+  
+  .card:hover::after{
+    opacity: .85;
+    transform: translateX(18%);
+  }
+  
+  /* cards cliquables: un peu plus "punchy" */
+  .card.link:hover{
+    border-color: rgba(255,42,85,.48);
+  }
+  
+  /* -----------------------------
+     Pills : léger glow au hover
+  -------------------------------- */
+  .pill{
+    transition: border-color 180ms var(--ease-out), box-shadow 180ms var(--ease-out), transform 180ms var(--ease-out);
+  }
+  
+  .card:hover .pill{
+    border-color: rgba(255,255,255,.18);
+    box-shadow: 0 0 18px rgba(255,42,85,.10);
+  }
+  
+  .card:hover .pill:first-child{
+    box-shadow: 0 0 22px rgba(255,42,85,.16);
+  }
+  
+  /* -----------------------------
+     Section titles : petit accent
+  -------------------------------- */
+  .section h2, .section-head h2{
+    position: relative;
+  }
+  
+  .section h2::after, .section-head h2::after{
+    content:"";
+    display:block;
+    height:2px;
+    width: 84px;
+    margin-top: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity:.9;
+  }
