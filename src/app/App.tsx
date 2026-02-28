@@ -94,7 +94,7 @@ export default function App() {
 
               <h1 className="hero-title">
                 <span className="hero-hello">Je m’appelle</span>{" "}
-                <span className="hero-name">Enzo Castetbon</span>
+                <span className="hero-name">IceliosPY</span>
               </h1>
 
               <p className="hero-sub">
