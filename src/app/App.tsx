@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AppLayout from "./layout/AppLayout";
 import PinnedProjects from "../components/pinned/PinnedProjects";
 
@@ -23,57 +24,141 @@ function IconLinkedIn(props: { className?: string }) {
   );
 }
 
+type Status = "idle" | "sending" | "success" | "error";
+
 export default function App() {
   const cvUrl = `${import.meta.env.BASE_URL}docs/CV.pdf`;
+  const web3Key = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
+
+  const [status, setStatus] = useState<Status>("idle");
+  const [feedback, setFeedback] = useState<string>("");
+
+  async function onContactSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!web3Key) {
+      setStatus("error");
+      setFeedback("Clé Web3Forms manquante : VITE_WEB3FORMS_KEY");
+      return;
+    }
+
+    setStatus("sending");
+    setFeedback("");
+
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
+    // anti-spam honeypot
+    if ((fd.get("botcheck") ?? "").toString().trim().length > 0) {
+      setStatus("success");
+      setFeedback("Message envoyé.");
+      form.reset();
+      return;
+    }
+
+    // champs Web3Forms
+    fd.set("access_key", web3Key);
+    fd.set("subject", "Nouveau message — Portfolio");
+    fd.set("from_name", "Portfolio");
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: fd,
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json?.success) throw new Error(json?.message || "Erreur");
+
+      setStatus("success");
+      setFeedback("Message envoyé, merci !");
+      form.reset();
+    } catch {
+      setStatus("error");
+      setFeedback("Impossible d’envoyer le message. Réessaie plus tard.");
+    }
+  }
 
   return (
     <AppLayout>
-      {/* Wrapper centré + 3 sections */}
       <section className="center-stack">
-        {/* 1) HERO */}
-        <section className="glass panel hero-card">
-          <h1 className="h-title">Enzo Castetbon</h1>
-          <p className="h-sub">
-            Fullstack developer. React/TypeScript côté front, et bases solides côté back & data.
-          </p>
+        {/* =========================
+            HERO (plus “pro”)
+        ========================== */}
+        <section className="glass panel hero-pro">
+          <div className="hero-pro-inner">
+            <div className="hero-pro-left">
+              <div className="hero-kicker">
+                <span className="badge">Portfolio</span>
+              </div>
 
-          <div className="hero-actions">
-            <a className="btn primary" href="#contact">
-              Me contacter
-            </a>
+              <h1 className="hero-title">
+                <span className="hero-hello">Je m’appelle</span>{" "}
+                <span className="hero-name">Enzo Castetbon</span>
+              </h1>
 
-            <div className="hero-icons" aria-label="Réseaux">
-              <a
-                className="icon-btn"
-                href="https://github.com/IceliosPY"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
-                title="GitHub"
-              >
-                <IconGithub className="icon" />
-              </a>
+              <p className="hero-sub">
+                Fullstack developer. React/TypeScript côté front, et bases solides côté back & data.
+              </p>
 
-              <a
-                className="icon-btn"
-                href="#"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-                title="LinkedIn"
-              >
-                <IconLinkedIn className="icon" />
-              </a>
+              <div className="hero-actions">
+                <a className="btn primary" href="#contact">
+                  Me contacter
+                </a>
+
+                <a className="icon-btn" href="https://github.com/IceliosPY" target="_blank" rel="noreferrer">
+                  <span className="sr-only">GitHub</span>
+                  <IconGithub className="icon" />
+                </a>
+
+                <a className="icon-btn" href="TON_LIEN_LINKEDIN_ICI" target="_blank" rel="noreferrer">
+                  <span className="sr-only">LinkedIn</span>
+                  <IconLinkedIn className="icon" />
+                </a>
+              </div>
+            </div>
+
+            {/* Optionnel : zone “visuel” à droite (vide mais prête) */}
+            <div className="hero-pro-right" aria-hidden="true">
+              <div className="hero-orb" />
             </div>
           </div>
         </section>
 
-        {/* 2) PROJETS */}
+        {/* =========================
+            A PROPOS (section dédiée)
+        ========================== */}
+        <section id="apropos" className="glass panel about-card">
+          <div className="about-head">
+            <h2 className="about-title">À propos</h2>
+          </div>
+
+          <div className="about-body">
+            <div className="about-bar" aria-hidden="true" />
+            <div className="about-text">
+              <p>
+                Développeur fullstack basé à Toulouse, je construis des applications web structurées,
+                performantes et maintenables. J’aime travailler avec une base front solide (React/TypeScript)
+                et un back propre (API, SQL, auth/roles).
+              </p>
+              <p>
+                J’accorde beaucoup d’importance à l’architecture, à la DX (dev experience), au design system
+                et aux micro-interactions — bref : un rendu “pro” qui reste simple et lisible.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================
+            PROJETS
+        ========================== */}
         <section id="projets" className="glass panel">
           <PinnedProjects />
         </section>
 
-        {/* 3) SKILLS + DOCS */}
+        {/* =========================
+            SKILLS + DOCS + CONTACT
+        ========================== */}
         <section className="glass panel">
           <div id="skills" className="badge">
             Skills
@@ -126,10 +211,52 @@ export default function App() {
           <div id="contact" className="badge">
             Contact
           </div>
-          <div className="row" style={{ marginTop: 12 }}>
-            <a className="btn" href="mailto:contact@exemple.com">
-              Email
-            </a>
+
+          <div className="section" style={{ marginTop: 12 }}>
+            <div className="section-head">
+              <h2 style={{ margin: 0 }}>Envoyer un message</h2>
+              {feedback ? (
+                <span className={`hint ${status === "error" ? "warn" : ""}`}>{feedback}</span>
+              ) : null}
+            </div>
+
+            <form onSubmit={onContactSubmit} className="contact-form">
+              <input
+                type="text"
+                name="botcheck"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hp"
+                aria-hidden="true"
+              />
+
+              <div className="contact-row">
+                <label className="field">
+                  <span>Nom</span>
+                  <input name="name" required placeholder="Ton nom" />
+                </label>
+
+                <label className="field">
+                  <span>Email</span>
+                  <input name="email" type="email" required placeholder="ton@email.com" />
+                </label>
+              </div>
+
+              <label className="field">
+                <span>Message</span>
+                <textarea name="message" required rows={6} placeholder="Ton message..." />
+              </label>
+
+              <div className="row" style={{ marginTop: 12 }}>
+                <button className="btn primary" type="submit" disabled={status === "sending"}>
+                  {status === "sending" ? "Envoi..." : "Envoyer"}
+                </button>
+
+                <a className="btn" href="mailto:enzo.castetbon@proton.me">
+                  Ou par email
+                </a>
+              </div>
+            </form>
           </div>
         </section>
       </section>
