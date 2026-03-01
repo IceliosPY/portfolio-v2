@@ -1,0 +1,54 @@
+[
+    {
+      "period": "07/2025 - aujourd'hui",
+      "title": "Développeur Freelance",
+      "org": "Indépendant",
+      "place": "Toulouse",
+      "type": "Freelance",
+      "mission": "Conception et développement d'applications web fullstack. Architecture REST, gestion base de données, interfaces React modernes et intégration de visualisations 3D (Three.js / Vanta.js).",
+      "skills": "React, TypeScript, Node.js, REST API, MariaDB, Three.js",
+      "links": [
+        { "label": "GitHub", "url": "https://github.com/IceliosPY" }
+      ]
+    },
+    {
+      "period": "2024 - 2025",
+      "title": "Applications Web & API sécurisées",
+      "org": "Université Paul Sabatier",
+      "place": "Toulouse",
+      "type": "Projets académiques",
+      "mission": "Conception d'applications web structurées : gestion d'équipes, authentification via API sécurisée, architecture MVC, gestion base de données relationnelle, communication client-serveur.",
+      "skills": "PHP, API REST, Authentification, SQL, Architecture logicielle",
+      "links": [
+        { "label": "Projet V1 (GitHub)", "url": "https://github.com/IceliosPY/R301-Site" },
+        {
+          "label": "Projet V2 (démo)",
+          "url": "https://naorito.alwaysdata.net/R4.01-Projet_API/Projet_PHP_API/Auth/Connexion.php"
+        }
+      ]
+    },
+    {
+      "period": "2023 - 2024",
+      "title": "Projets systèmes & algorithmique",
+      "org": "Université Paul Sabatier",
+      "place": "Toulouse",
+      "type": "Projets académiques",
+      "mission": "Développement en C et Python (cryptographie, graphes, proxy réseau). Implémentation d'algorithmes (Dijkstra, Bellman-Ford). Création d'interfaces graphiques (SDL, GTK).",
+      "skills": "C, Python, Algorithmes, Réseaux, SDL, GTK",
+      "links": [
+        { "label": "ADA-Hashi (GitHub)", "url": "https://github.com/IceliosPY/ADA-Hashi" }
+      ]
+    },
+    {
+      "period": "2022 - 2023",
+      "title": "Traducteur technique (jeu vidéo)",
+      "org": "Stranga Studios",
+      "place": "Indépendant",
+      "type": "Freelance",
+      "mission": "Traduction Anglais → Français de scripts PyGame. Adaptation stylistique et contextualisation des dialogues pour cohérence narrative.",
+      "skills": "PyGame, Anglais technique",
+      "links": [
+        { "label": "Profil GitHub", "url": "https://github.com/IceliosPY" }
+      ]
+    }
+  ]

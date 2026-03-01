@@ -1,0 +1,27 @@
+/* TOKENS / BASE THEME */
+:root{
+    --bg0:#07080b;
+    --bg1:#0b0d12;
+  
+    --glass: rgba(18, 18, 22, 0.55);
+    --glass-2: rgba(18, 18, 22, 0.35);
+    --stroke: rgba(255,255,255,0.10);
+  
+    --text: rgba(245,247,250,0.92);
+    --muted: rgba(245,247,250,0.65);
+  
+    --accent: #ff2a55;
+    --accent2:#ff5a7a;
+  
+    --shadow: 0 20px 60px rgba(0,0,0,0.50);
+    --radius: 22px;
+  
+    --container: 1180px;
+    --nav-h: 64px;
+  
+    --ease-out: cubic-bezier(.22,.61,.36,1);
+    --glow: rgba(255,42,85,.22);
+    --glow-strong: rgba(255,42,85,.35);
+    --stroke-hot: rgba(255,42,85,.38);
+    --stroke-hot-2: rgba(255,90,122,.26);
+  }

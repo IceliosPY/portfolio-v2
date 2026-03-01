@@ -1,0 +1,64 @@
+/* COMMON UI */
+.glass{
+    background: var(--glass);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .glass.soft{
+    background: var(--glass-2);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+  }
+  
+  .panel{ padding: 18px; }
+  
+  .h-title{
+    font-size: 34px;
+    line-height: 1.05;
+    margin: 0 0 8px;
+    letter-spacing: -0.5px;
+  }
+  .h-sub{
+    margin: 0 0 16px;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+  
+  .row{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items:center;
+  }
+  
+  .small{
+    font-size: 13px;
+    color: var(--muted);
+  }
+  
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(0,0,0,0.18);
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+  
+  .divider{
+    height:1px;
+    background: rgba(255,255,255,0.08);
+    margin: 14px 0;
+  }
+  
+  /* A11Y reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .card, .btn, .nav-links a { transition: none !important; }
+    .card::before, .card::after,
+    .btn::after { transition: none !important; }
+  }

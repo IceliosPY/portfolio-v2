@@ -1,0 +1,30 @@
+/* APP SHELL / LAYOUT */
+.shell{
+    position: relative;
+    z-index: 10;
+    min-height: 100%;
+  }
+  
+  .container{
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 28px 18px 70px;
+  }
+  
+  /* APP PAGE LAYOUT */
+  .center-stack{
+    max-width: 920px;
+    margin: 0 auto;
+    display: grid;
+    gap: 16px;
+  }
+  
+  .skills-grid{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  @media (max-width: 720px){
+    .skills-grid{ grid-template-columns: 1fr; }
+    .center-stack{ max-width: 720px; }
+  }

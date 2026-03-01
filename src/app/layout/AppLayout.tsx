@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BackgroundVaporwave from "../../components/background/BackgroundVaporwave";
 
 function IconGithub(props: { className?: string }) {
@@ -29,8 +30,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // Réseaux: open = visible, pinned = maintenu par click
   const [socialOpen, setSocialOpen] = useState(false);
   const [socialPinned, setSocialPinned] = useState(false);
-
   const socialRef = useRef<HTMLDivElement | null>(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const prefersReduced = useMemo(() => {
     return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
@@ -80,33 +83,43 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const openOnHover = () => {
-    setSocialOpen(true);
-  };
-
+  // Hover open / leave close (si pas pinned)
+  const openOnHover = () => setSocialOpen(true);
   const closeOnLeave = () => {
-    // si pinned: on ne ferme pas
     if (!socialPinned) setSocialOpen(false);
   };
 
+  // Click = toggle pinned (et force open)
   const togglePinned = () => {
     setSocialPinned((p) => {
       const next = !p;
-      setSocialOpen(true); // au click on force l'ouverture
+      setSocialOpen(true);
       return next;
     });
   };
 
-  const onFocusIn = () => {
-    setSocialOpen(true);
-  };
-
+  // A11y focus
+  const onFocusIn = () => setSocialOpen(true);
   const onBlurCapture = (e: React.FocusEvent<HTMLDivElement>) => {
-    // si on sort du bloc (et pas pinned), on ferme
     const next = e.relatedTarget as Node | null;
     if (!socialRef.current) return;
     if (!socialRef.current.contains(next) && !socialPinned) {
       setSocialOpen(false);
+    }
+  };
+
+  // Navigation vers sections Home, même si on est sur /experiences
+  const goSection = (hash: string) => {
+    if (location.pathname !== "/") {
+      navigate({ pathname: "/", hash }, { replace: false });
+      // laisse React Router rendre Home, puis scroll
+      setTimeout(() => {
+        const el = document.querySelector(hash);
+        el?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    } else {
+      const el = document.querySelector(hash);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -127,10 +140,24 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
 
             <nav className="nav-links" aria-label="Navigation">
-              <a href="#apropos">À propos</a>
-              <a href="#projets">Projets</a>
-              <a href="#skills">Skills</a>
-              <a href="#docs">Documents</a>
+              {/* Sections de Home */}
+              <button type="button" className="nav-link-btn" onClick={() => goSection("#apropos")}>
+                À propos
+              </button>
+              <button type="button" className="nav-link-btn" onClick={() => goSection("#projets")}>
+                Projets
+              </button>
+              <button type="button" className="nav-link-btn" onClick={() => goSection("#skills")}>
+                Skills
+              </button>
+              <button type="button" className="nav-link-btn" onClick={() => goSection("#docs")}>
+                Documents
+              </button>
+
+              {/* ✅ Page secondaire */}
+              <NavLink to="/experiences" className="nav-link-router">
+                Expériences
+              </NavLink>
 
               {/* Réseaux (hover = open, click = pinned) */}
               <div
@@ -162,7 +189,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => {
-                      // option: garder pinned ouvert après clic lien ? Ici on ferme.
                       setSocialOpen(false);
                       setSocialPinned(false);
                     }}
@@ -188,7 +214,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              <button className="btn" onClick={() => setFxEnabled((v) => !v)}>
+              <button className="btn" type="button" onClick={() => setFxEnabled((v) => !v)}>
                 {fxEnabled ? "Effets: ON" : "Effets: OFF"}
               </button>
             </nav>

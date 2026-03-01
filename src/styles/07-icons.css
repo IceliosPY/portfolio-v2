@@ -1,0 +1,44 @@
+/* ICON BUTTONS */
+.icon-btn{
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      transform 120ms ease,
+      background 160ms ease,
+      border 160ms ease,
+      box-shadow 180ms ease;
+  }
+  
+  .icon-btn:hover{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,42,85,0.28);
+    box-shadow: 0 0 22px rgba(255,42,85,.10);
+  }
+  
+  .icon-btn:active{
+    transform: translateY(1px) scale(.985);
+  }
+  
+  .icon{
+    width: 20px;
+    height: 20px;
+    color: rgba(245,247,250,0.88);
+  }
+  
+  .icon-btn-dot{
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: rgba(255,42,85,0.18);
+    border: 1px solid rgba(255,42,85,0.35);
+    box-shadow: 0 0 18px rgba(255,42,85,0.15);
+  }

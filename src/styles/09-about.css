@@ -1,0 +1,82 @@
+/* ABOUT */
+.about-pro .section-title{
+    display: grid;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .about-pro .section-title h2{
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: -0.2px;
+  }
+  .section-underline{
+    height:2px;
+    width: 90px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: .9;
+  }
+  
+  .about-pro-grid{
+    display: grid;
+    grid-template-columns: 1.3fr .9fr;
+    gap: 16px;
+  }
+  @media (max-width: 900px){
+    .about-pro-grid{ grid-template-columns: 1fr; }
+  }
+  
+  .about-pro-text p{
+    margin: 0 0 10px;
+    color: rgba(245,247,250,0.78);
+    line-height: 1.55;
+  }
+  
+  .about-pro-points{ display: grid; gap: 10px; }
+  
+  .point{
+    display: grid;
+    grid-template-columns: 10px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(0,0,0,0.16);
+  }
+  .point .dot{
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255,42,85,0.22);
+    border: 1px solid rgba(255,42,85,0.38);
+    box-shadow: 0 0 18px rgba(255,42,85,0.12);
+    margin-top: 4px;
+  }
+  
+  /* About card variant */
+  .about-card{ padding: 26px; }
+  .about-title{
+    margin: 0 0 14px;
+    font-size: 34px;
+    letter-spacing: -0.5px;
+  }
+  .about-body{
+    display:grid;
+    grid-template-columns: 10px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .about-bar{
+    width: 4px;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255,42,85,0.75), rgba(255,42,85,0.15));
+    box-shadow: 0 0 18px rgba(255,42,85,0.15);
+  }
+  .about-text p{
+    margin: 0 0 10px;
+    color: rgba(245,247,250,0.86);
+    line-height: 1.55;
+  }
+  .about-text p:last-child{ margin-bottom: 0; }
