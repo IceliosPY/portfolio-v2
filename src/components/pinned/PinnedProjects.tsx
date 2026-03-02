@@ -25,8 +25,6 @@ export default function PinnedProjects() {
         {error ? <span className="hint warn">{error}</span> : null}
       </div>
 
-      {/* debug : retire cette ligne quand c’est ok */}
-      <div className="hint">count: {loading ? "…" : data.length}</div>
 
       <div className="pinned-grid">
         {loading
