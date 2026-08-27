@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       - name: Generate pinned data (GraphQL)
         run: node scripts/generate-pinned.mjs
         env:

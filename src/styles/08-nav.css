@@ -13,6 +13,7 @@
     max-width: var(--container);
     margin: 0 auto;
     padding: 14px 18px;
+    position: relative;
     display:flex;
     align-items:center;
     justify-content: space-between;
@@ -26,6 +27,7 @@
     font-weight: 700;
     letter-spacing: 0.2px;
   }
+  .brand.active{ color: var(--text); }
   .brand-dot{
     width:10px;height:10px;border-radius:999px;
     background: var(--accent);
@@ -38,6 +40,10 @@
     color: var(--muted);
     font-size: 14px;
     align-items:center;
+  }
+
+  .nav-toggle{
+    display: none;
   }
   
   .nav-links a{
@@ -68,55 +74,7 @@
     transform: scaleX(1);
   }
   
-  /* NAV SOCIAL */
-  .nav-social{
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-  }
-  .nav-social[data-pinned="true"] .icon-btn{
-    border-color: rgba(255,42,85,0.35);
-    box-shadow: 0 0 18px rgba(255,42,85,0.10);
-  }
-  
-  .social-pop{
-    position: absolute;
-    top: calc(100% + 10px);
-    right: 0;
-    min-width: 180px;
-    padding: 8px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.10);
-    background: rgba(12,12,16,0.72);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.55);
-  
-    opacity: 0;
-    transform: translateY(-6px);
-    pointer-events: none;
-    transition: opacity 140ms ease, transform 140ms ease;
-  }
-  .nav-social[data-open="true"] .social-pop{
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-  
-  .social-item{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 10px;
-    border-radius: 12px;
-    color: var(--text);
-  }
-  .social-item span{
-    font-size: 14px;
-    color: var(--muted);
-  }
-  .social-item:hover{ background: rgba(255,255,255,0.06); }
-  .social-item:hover span{ color: var(--text); }
+  .nav-network-label{ display: none; }
   
   /* NAV BUTTONS / ROUTER LINKS */
   .nav-link-btn{
@@ -164,3 +122,108 @@
     color: var(--text);
   }
   .nav-link-router.active{ color: var(--text); }
+
+  .nav-toggle:focus-visible,
+  .nav-link-btn:focus-visible,
+  .nav-link-router:focus-visible,
+  .nav-network:focus-visible{
+    outline: 2px solid var(--accent2);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 900px){
+    .nav-inner{
+      min-height: var(--nav-h);
+      padding-block: 10px;
+    }
+
+    .nav-toggle{
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      background: rgba(0,0,0,0.24);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .nav-toggle-indicator{
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,42,85,0.60);
+      background: rgba(255,42,85,0.22);
+      box-shadow: 0 0 14px rgba(255,42,85,0.24);
+    }
+
+    .nav-toggle[aria-expanded="true"] .nav-toggle-indicator{
+      background: rgba(255,42,85,0.78);
+    }
+
+    .nav-links{
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 18px;
+      right: 18px;
+      display: grid;
+      gap: 4px;
+      padding: 10px;
+      max-height: calc(100vh - var(--nav-h) - 28px);
+      overflow-y: auto;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      background: rgba(9,9,13,0.96);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 22px 60px rgba(0,0,0,0.55);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition:
+        opacity 160ms var(--ease-out),
+        transform 180ms var(--ease-out),
+        visibility 160ms;
+    }
+
+    .nav-links[data-mobile-open="true"]{
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .nav-link-btn,
+    .nav-link-router,
+    .nav-network,
+    .nav-effects{
+      width: 100%;
+      min-height: 44px;
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .nav-link-router.active{
+      border-left: 2px solid var(--accent);
+      background: rgba(255,42,85,0.10);
+    }
+
+    .nav-network{
+      gap: 10px;
+      padding-inline: 12px;
+    }
+
+    .nav-network-label{ display: inline; }
+  }
+
+  @media (max-width: 480px){
+    .brand .badge{ display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-links{ transition: none; }
+  }

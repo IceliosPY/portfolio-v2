@@ -9,7 +9,6 @@
 }
 @media (max-width: 900px){
   .hero-pro-inner{ grid-template-columns: 1fr; }
-  .hero-pro-right{ display:none; }
 }
 
 .hero-kicker{
@@ -85,6 +84,10 @@
     inset 0 0 60px rgba(255,255,255,0.04),
     0 30px 90px rgba(0,0,0,0.45);
   border: 1px solid rgba(255,255,255,0.08);
+}
+
+@media (max-width: 900px){
+  .hero-pro-right{ display:none; }
 }
 
 /* optional grid variant */

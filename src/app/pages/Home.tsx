@@ -12,17 +12,6 @@ function IconGithub(props: { className?: string }) {
   );
 }
 
-function IconLinkedIn(props: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={props.className}>
-      <path
-        fill="currentColor"
-        d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.5 23.5h4V7.98h-4V23.5ZM8 7.98h3.83v2.12h.05c.54-1.02 1.86-2.1 3.83-2.1 4.1 0 4.86 2.7 4.86 6.21v9.29h-4v-8.24c0-1.96-.04-4.49-2.73-4.49-2.73 0-3.15 2.13-3.15 4.35v8.38H8V7.98Z"
-      />
-    </svg>
-  );
-}
-
 type Status = "idle" | "sending" | "success" | "error";
 
 export default function Home() {
@@ -112,16 +101,6 @@ export default function Home() {
                 <IconGithub className="icon" />
               </a>
 
-              <a
-                className="icon-btn"
-                href="TON_LIEN_LINKEDIN_ICI"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-                title="LinkedIn"
-              >
-                <IconLinkedIn className="icon" />
-              </a>
             </div>
           </div>
 

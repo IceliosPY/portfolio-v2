@@ -6,6 +6,8 @@
   }
   
   .container{
+    width: 100%;
+    min-width: 0;
     max-width: var(--container);
     margin: 0 auto;
     padding: 28px 18px 70px;
@@ -13,10 +15,21 @@
   
   /* APP PAGE LAYOUT */
   .center-stack{
+    min-width: 0;
     max-width: 920px;
     margin: 0 auto;
     display: grid;
     gap: 16px;
+  }
+
+  .center-stack > *,
+  .panel,
+  .card{
+    min-width: 0;
+  }
+
+  .center-stack [id]{
+    scroll-margin-top: calc(var(--nav-h) + 18px);
   }
   
   .skills-grid{

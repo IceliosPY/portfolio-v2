@@ -44,8 +44,8 @@ export function usePinnedRepos(limit = 6) {
           data,
           error: null,
         });
-      } catch (e: any) {
-        if (e?.name === "AbortError") return;
+      } catch (e: unknown) {
+        if (e instanceof Error && e.name === "AbortError") return;
 
         setState({
           status: "error",

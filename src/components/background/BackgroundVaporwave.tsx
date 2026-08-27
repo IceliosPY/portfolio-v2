@@ -75,6 +75,8 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
 
     const prefersReduced =
       window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+    const isCompactViewport =
+      window.matchMedia?.("(max-width: 720px)")?.matches ?? false;
 
     const animateAllowed = !prefersReduced;
 
@@ -92,9 +94,15 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
     camera.position.set(0, 4.2, 10.5);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !isCompactViewport,
+      alpha: true,
+      powerPreference: isCompactViewport ? "low-power" : "high-performance",
+    });
     renderer.setSize(host.clientWidth, host.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, isCompactViewport ? 1 : 1.5)
+    );
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     host.appendChild(renderer.domElement);
 
@@ -180,7 +188,7 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
 
     // ========= LOOP =========
     let t0 = performance.now();
-    const targetFps = 45;
+    const targetFps = isCompactViewport ? 30 : 45;
     const frameMin = 1000 / targetFps;
 
     let v = 0;
@@ -200,7 +208,7 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
     };
 
     window.addEventListener("resize", onResize);
-    window.addEventListener("mousemove", onMouseMove);
+    if (!isCompactViewport) window.addEventListener("mousemove", onMouseMove);
 
     const renderOnce = () => renderer.render(scene, camera);
 
@@ -232,7 +240,7 @@ export default function BackgroundVaporwave({ enabled = true }: Props) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("mousemove", onMouseMove);
+      if (!isCompactViewport) window.removeEventListener("mousemove", onMouseMove);
 
       if (renderer.domElement.parentElement === host) {
         host.removeChild(renderer.domElement);
