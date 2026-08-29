@@ -31,13 +31,96 @@
   .center-stack [id]{
     scroll-margin-top: calc(var(--nav-h) + 18px);
   }
-  
+
+  .container--home .center-stack [id]{
+    scroll-margin-top: calc(var(--nav-h) + var(--home-subnav-h) + 18px);
+  }
+
+  .home-content-panel{
+    padding: 26px;
+  }
+
+  .home-section-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .home-section-title{
+    margin: 0;
+    font-size: 34px;
+    letter-spacing: -0.5px;
+  }
+
+  .home-section-content{
+    margin-top: 12px;
+  }
+
   .skills-grid{
-    display:grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(132px, 100%), 1fr));
     gap: 12px;
   }
+
+  .skill-card{
+    min-width: 0;
+    min-height: 126px;
+    padding: 16px 12px 14px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 12px;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 16px;
+    background: rgba(0,0,0,0.18);
+    text-align: center;
+    transition:
+      transform 180ms var(--ease-out),
+      border-color 180ms var(--ease-out),
+      background 180ms var(--ease-out),
+      box-shadow 180ms var(--ease-out);
+  }
+
+  .skill-card:hover{
+    transform: translateY(-2px);
+    border-color: rgba(255,42,85,0.28);
+    background: rgba(255,42,85,0.06);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.24);
+  }
+
+  .skill-card__icon-shell{
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.035);
+  }
+
+  .skill-card__icon{
+    display: block;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .skill-card__icon--unity{
+    filter: brightness(0) invert(1);
+  }
+
+  .skill-card__name{
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
   @media (max-width: 720px){
-    .skills-grid{ grid-template-columns: 1fr; }
     .center-stack{ max-width: 720px; }
+    .home-content-panel{ padding: 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .skill-card{ transition: none; }
+    .skill-card:hover{ transform: none; }
   }

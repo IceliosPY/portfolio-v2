@@ -18,6 +18,7 @@
   
     --container: 1180px;
     --nav-h: 64px;
+    --home-subnav-h: 54px;
   
     --ease-out: cubic-bezier(.22,.61,.36,1);
     --glow: rgba(255,42,85,.22);

@@ -6,7 +6,35 @@ type State =
   | { status: "success"; data: PinnedRepo[]; error: null }
   | { status: "error"; data: null; error: string };
 
-export function usePinnedRepos(limit = 6) {
+export type PinnedReposView = {
+  loading: boolean;
+  available: boolean;
+  data: PinnedRepo[];
+  error: string | null;
+};
+
+function isPinnedRepo(value: unknown): value is PinnedRepo {
+  if (typeof value !== "object" || value === null) return false;
+
+  const repository = value as Record<string, unknown>;
+
+  return (
+    typeof repository.id === "string" &&
+    typeof repository.name === "string" &&
+    typeof repository.fullName === "string" &&
+    typeof repository.description === "string" &&
+    typeof repository.url === "string" &&
+    typeof repository.stars === "number" &&
+    typeof repository.forks === "number" &&
+    typeof repository.updatedAt === "string" &&
+    typeof repository.archived === "boolean" &&
+    (repository.homepageUrl === undefined || typeof repository.homepageUrl === "string") &&
+    (repository.language === undefined || typeof repository.language === "string") &&
+    (repository.languageColor === undefined || typeof repository.languageColor === "string")
+  );
+}
+
+export function usePinnedRepos(limit = 6): PinnedReposView {
   const [state, setState] = useState<State>({
     status: "loading",
     data: null,
@@ -31,9 +59,9 @@ export function usePinnedRepos(limit = 6) {
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const json = await res.json();
+        const json: unknown = await res.json();
 
-        if (!Array.isArray(json)) {
+        if (!Array.isArray(json) || !json.every(isPinnedRepo)) {
           throw new Error("Invalid JSON");
         }
 
@@ -50,7 +78,7 @@ export function usePinnedRepos(limit = 6) {
         setState({
           status: "error",
           data: null,
-          error: "Impossible de charger les projets épinglés.",
+          error: "Enrichissement GitHub indisponible — données locales affichées.",
         });
       }
     })();
@@ -61,6 +89,7 @@ export function usePinnedRepos(limit = 6) {
   const view = useMemo(() => {
     return {
       loading: state.status === "loading",
+      available: state.status === "success",
       data: state.status === "success" ? state.data : [],
       error: state.status === "error" ? state.error : null,
     };

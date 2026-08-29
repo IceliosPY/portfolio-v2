@@ -1,71 +1,103 @@
+import { githubFallbackProjects } from "../../data/projects";
 import { usePinnedRepos } from "../../hooks/usePinnedRepos";
+import type { PinnedRepo } from "../../types/pinned";
 
-function SkeletonCard() {
-  return (
-    <div className="card">
-      <div className="sk-line sk-title" />
-      <div className="sk-line sk-text" />
-      <div className="sk-line sk-text short" />
-      <div className="sk-row">
-        <div className="sk-pill" />
-        <div className="sk-pill" />
-        <div className="sk-pill" />
-      </div>
-    </div>
-  );
+type RepositoryCard = {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  label: string;
+  technologies: readonly string[];
+  github?: PinnedRepo;
+};
+
+const dateFormatter = new Intl.DateTimeFormat("fr-FR");
+
+function formatDate(value: string): string | null {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : dateFormatter.format(date);
 }
 
 export default function PinnedProjects() {
-  const { loading, data, error } = usePinnedRepos(6);
+  const { loading, available, data, error } = usePinnedRepos(6);
+  const repositories: RepositoryCard[] = available
+    ? data.map((repository) => ({
+        id: repository.id,
+        title: repository.name,
+        description: repository.description || "Aucune description GitHub.",
+        url: repository.url,
+        label: "GitHub",
+        technologies: repository.language ? [repository.language] : [],
+        github: repository,
+      }))
+    : githubFallbackProjects.flatMap((project) =>
+        project.repository
+          ? [
+              {
+                id: project.id,
+                title: project.title,
+                description: project.shortDescription,
+                url: project.repository.url,
+                label: project.category,
+                technologies: project.primaryTechnologies,
+              },
+            ]
+          : [],
+      );
 
   return (
-    <section className="section">
+    <div className="section">
       <div className="section-head">
-        <h2>Projets épinglés</h2>
-        {error ? <span className="hint warn">{error}</span> : null}
+        <div>
+          <span className="badge">Activité GitHub</span>
+          <h2>Repositories GitHub épinglés</h2>
+        </div>
+        <span className={`hint ${error ? "warn" : ""}`} aria-live="polite">
+          {loading ? "Synchronisation GitHub…" : error}
+        </span>
       </div>
-
 
       <div className="pinned-grid">
-        {loading
-          ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-          : data.map((p) => (
-              <a
-                key={p.id}
-                className="card link"
-                href={p.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div className="card-top">
-                  <h3>{p.name}</h3>
-                  {p.archived ? <span className="badge">archived</span> : null}
-                </div>
+        {repositories.map((repository) => {
+          const updatedAt = repository.github ? formatDate(repository.github.updatedAt) : null;
 
-                <p className="muted">{p.description || "—"}</p>
+          return (
+            <a
+              key={repository.id}
+              className="card link project-card"
+              href={repository.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${repository.title} sur GitHub`}
+            >
+              <div className="card-top">
+                <h3>{repository.title}</h3>
+                <span className="badge">{repository.label}</span>
+              </div>
 
-                <div className="meta">
-                  {p.language ? (
-                    <span
-                      className="pill"
-                      style={{
-                        borderColor: p.languageColor || "rgba(255,255,255,.25)",
-                        color: p.languageColor || "rgba(255,255,255,.75)",
-                      }}
-                    >
-                      ● {p.language}
-                    </span>
-                  ) : null}
+              <p className="muted">{repository.description}</p>
 
-                  <span className="pill">★ {p.stars}</span>
-                  <span className="pill">⑂ {p.forks}</span>
-                  <span className="pill">
-                    {new Date(p.updatedAt).toLocaleDateString("fr-FR")}
+              <div className="meta project-card__technologies" aria-label="Technologies">
+                {repository.technologies.map((technology) => (
+                  <span className="pill" key={technology}>
+                    {technology}
                   </span>
+                ))}
+              </div>
+
+              {repository.github ? (
+                <div className="meta project-card__github" aria-label="Informations GitHub">
+                  {repository.github.archived ? <span className="pill">Archivé</span> : null}
+                  <span className="pill">★ {repository.github.stars}</span>
+                  <span className="pill">⑂ {repository.github.forks}</span>
+                  {updatedAt ? <span className="pill">Mis à jour le {updatedAt}</span> : null}
                 </div>
-              </a>
-            ))}
+              ) : null}
+            </a>
+          );
+        })}
       </div>
-    </section>
+    </div>
   );
 }

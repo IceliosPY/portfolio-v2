@@ -1,0 +1,154 @@
+/* CV */
+.cv-page{
+  width: 100%;
+  max-width: 1080px;
+  min-width: 0;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.cv-head{
+  padding: 26px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.cv-head h1{
+  margin: 12px 0 8px;
+  font-size: 42px;
+  letter-spacing: -0.6px;
+}
+
+.cv-head p,
+.cv-viewer-head p{
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.cv-actions{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cv-viewer-panel{
+  min-width: 0;
+  padding: 18px;
+}
+
+.cv-viewer-head{
+  margin-bottom: 14px;
+}
+
+.cv-viewer-head h2{
+  margin: 0 0 5px;
+  font-size: 24px;
+}
+
+.cv-viewer-scroll-region{
+  width: 100%;
+  min-width: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #7f2a3d rgba(5,5,8,0.82);
+}
+
+.cv-viewer-scroll-region::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+
+.cv-viewer-scroll-region::-webkit-scrollbar-track{
+  border-radius: 999px;
+  background: rgba(5,5,8,0.82);
+}
+
+.cv-viewer-scroll-region::-webkit-scrollbar-thumb{
+  min-height: 40px;
+  border: 2px solid rgba(5,5,8,0.82);
+  border-radius: 999px;
+  background: #7f2a3d;
+}
+
+.cv-viewer-scroll-region::-webkit-scrollbar-thumb:hover{
+  background: #a33a52;
+}
+
+.cv-viewer{
+  width: 100%;
+  height: min(1080px, calc(100vh - 120px));
+  min-height: 720px;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  background: rgba(0,0,0,0.28);
+}
+
+.cv-viewer-fallback{
+  min-height: 360px;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 16px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.cv-viewer-fallback p{
+  margin: 0;
+}
+
+.cv-page a:focus-visible{
+  outline: 2px solid var(--accent2);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px){
+  .cv-head{
+    padding: 20px;
+    display: grid;
+    align-items: initial;
+  }
+
+  .cv-head h1{
+    font-size: 34px;
+  }
+
+  .cv-actions,
+  .cv-actions .btn{
+    width: 100%;
+  }
+
+  .cv-actions .btn{
+    justify-content: center;
+    text-align: center;
+  }
+
+  .cv-viewer-panel{
+    padding: 12px;
+  }
+
+  .cv-viewer-scroll-region{
+    border-radius: 12px;
+  }
+
+  .cv-viewer{
+    height: 72vh;
+    min-height: 520px;
+    border-radius: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cv-page a{ transition: none !important; }
+}

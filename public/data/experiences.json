@@ -1,5 +1,20 @@
 [
     {
+      "period": "2026 - aujourd'hui",
+      "title": "Mankind: Renewal",
+      "org": "Projet personnel",
+      "type": "Développement de jeu vidéo",
+      "mission": "Développement d’un RPG tactique au tour par tour, actuellement en développement.",
+      "skills": "Godot, C#",
+      "links": [
+        {
+          "label": "Voir le projet",
+          "url": "/projects/mankind-renewal",
+          "type": "internal"
+        }
+      ]
+    },
+    {
       "period": "07/2025 - aujourd'hui",
       "title": "Développeur Freelance",
       "org": "Indépendant",

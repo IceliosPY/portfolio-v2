@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-type LinkItem = { label: string; url: string };
+type LinkItem = {
+  label: string;
+  url: string;
+  type?: "internal" | "external";
+};
 
 type Experience = {
   period: string;
   title: string;
   org: string;
-  place: string;
+  place?: string;
   type: string;
   mission: string;
   skills: string;
@@ -64,7 +69,14 @@ export default function Experiences() {
               <h2 className="exp-role">{e.title}</h2>
 
               <div className="exp-meta">
-                <strong>{e.org}</strong> <span>•</span> {e.place} <span>•</span>{" "}
+                <strong>{e.org}</strong>
+                {e.place ? (
+                  <>
+                    <span>•</span>
+                    <span>{e.place}</span>
+                  </>
+                ) : null}
+                <span>•</span>
                 <em>{e.type}</em>
               </div>
 
@@ -78,21 +90,30 @@ export default function Experiences() {
 
               {e.links?.length ? (
                 <div className="exp-links" aria-label="Liens du projet">
-                  {e.links.map((l, i) => (
-                    <a
-                      key={`${l.url}-${i}`}
-                      className="exp-link"
-                      href={l.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      title={l.url}
-                    >
-                      <span className="exp-link-label">{l.label}</span>
-                      <span className="exp-link-arrow" aria-hidden="true">
-                        ↗
-                      </span>
-                    </a>
-                  ))}
+                  {e.links.map((l, i) =>
+                    l.type === "internal" ? (
+                      <Link key={`${l.url}-${i}`} className="exp-link" to={l.url} title={l.url}>
+                        <span className="exp-link-label">{l.label}</span>
+                        <span className="exp-link-arrow" aria-hidden="true">
+                          →
+                        </span>
+                      </Link>
+                    ) : (
+                      <a
+                        key={`${l.url}-${i}`}
+                        className="exp-link"
+                        href={l.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        title={l.url}
+                      >
+                        <span className="exp-link-label">{l.label}</span>
+                        <span className="exp-link-arrow" aria-hidden="true">
+                          ↗
+                        </span>
+                      </a>
+                    ),
+                  )}
                 </div>
               ) : null}
             </div>

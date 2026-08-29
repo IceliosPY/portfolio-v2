@@ -1,5 +1,7 @@
 import { useState } from "react";
+import githubAvatar from "../../assets/profile/github-avatar.png";
 import PinnedProjects from "../../components/pinned/PinnedProjects";
+import { featuredSkills } from "../../data/skills";
 
 function IconGithub(props: { className?: string }) {
   return (
@@ -15,7 +17,6 @@ function IconGithub(props: { className?: string }) {
 type Status = "idle" | "sending" | "success" | "error";
 
 export default function Home() {
-  const cvUrl = `${import.meta.env.BASE_URL}docs/CV.pdf`;
   const web3Key = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
 
   const [status, setStatus] = useState<Status>("idle");
@@ -78,7 +79,7 @@ export default function Home() {
 
             <h1 className="hero-title">
               <span className="hero-hello">Je m’appelle</span>{" "}
-              <span className="hero-name">Enzo Castetbon</span>
+              <span className="hero-name">Elisys</span>
             </h1>
 
             <p className="hero-sub">
@@ -104,8 +105,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-pro-right" aria-hidden="true">
-            <div className="hero-orb" />
+          <div className="hero-pro-right">
+            <img
+              className="hero-profile-image"
+              src={githubAvatar}
+              alt="Photo de profil d’Elisys"
+              width={220}
+              height={220}
+            />
           </div>
         </div>
       </section>
@@ -129,111 +136,77 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROJETS */}
-      <section id="projets" className="glass panel">
+      {/* REPOSITORIES GITHUB */}
+      <section id="github" className="glass panel">
         <PinnedProjects />
       </section>
 
-      {/* SKILLS + DOCS + CONTACT */}
-      <section className="glass panel">
-        <div id="skills" className="badge">
-          Skills
+      {/* SKILLS */}
+      <section id="skills" className="glass panel home-content-panel">
+        <h2 className="home-section-title">Compétences</h2>
+
+        <div className="skills-grid home-section-content" aria-label="Technologies principales">
+          {featuredSkills.map((skill) => (
+            <div className="skill-card" key={skill.name}>
+              <span className="skill-card__icon-shell" aria-hidden="true">
+                <img
+                  className={`skill-card__icon${skill.iconClassName ? ` ${skill.iconClassName}` : ""}`}
+                  src={skill.icon}
+                  alt=""
+                />
+              </span>
+              <strong className="skill-card__name">{skill.name}</strong>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="glass panel home-content-panel">
+        <div className="home-section-head">
+          <h2 className="home-section-title">Contact</h2>
+          {feedback ? (
+            <span className={`hint ${status === "error" ? "warn" : ""}`}>{feedback}</span>
+          ) : null}
         </div>
 
-        <div className="skills-grid" style={{ marginTop: 12 }}>
-          <div className="card">
-            <strong>Frontend</strong>
-            <div className="small" style={{ marginTop: 6 }}>
-              React • TypeScript • Vite • Three.js
-            </div>
-          </div>
+        <form onSubmit={onContactSubmit} className="contact-form">
+          <input
+            type="text"
+            name="botcheck"
+            tabIndex={-1}
+            autoComplete="off"
+            className="hp"
+            aria-hidden="true"
+          />
 
-          <div className="card">
-            <strong>Backend & Data</strong>
-            <div className="small" style={{ marginTop: 6 }}>
-              PHP • SQL • APIs • Auth/roles
-            </div>
-          </div>
-
-          <div className="card">
-            <strong>Dev</strong>
-            <div className="small" style={{ marginTop: 6 }}>
-              Git • GitHub Actions • CI/CD • Docker
-            </div>
-          </div>
-
-          <div className="card">
-            <strong>UI</strong>
-            <div className="small" style={{ marginTop: 6 }}>
-              Design system • Micro-interactions • A11y
-            </div>
-          </div>
-        </div>
-
-        <div className="divider" />
-
-        <div id="docs" className="badge">
-          Documents
-        </div>
-
-        <div className="row" style={{ marginTop: 12 }}>
-          <a className="btn" href={cvUrl} target="_blank" rel="noreferrer">
-            CV (PDF)
-          </a>
-        </div>
-
-        <div className="divider" />
-
-        <div id="contact" className="badge">
-          Contact
-        </div>
-
-        <div className="section" style={{ marginTop: 12 }}>
-          <div className="section-head">
-            <h2 style={{ margin: 0 }}>Envoyer un message</h2>
-            {feedback ? (
-              <span className={`hint ${status === "error" ? "warn" : ""}`}>{feedback}</span>
-            ) : null}
-          </div>
-
-          <form onSubmit={onContactSubmit} className="contact-form">
-            <input
-              type="text"
-              name="botcheck"
-              tabIndex={-1}
-              autoComplete="off"
-              className="hp"
-              aria-hidden="true"
-            />
-
-            <div className="contact-row">
-              <label className="field">
-                <span>Nom</span>
-                <input name="name" required placeholder="Ton nom" />
-              </label>
-
-              <label className="field">
-                <span>Email</span>
-                <input name="email" type="email" required placeholder="ton@email.com" />
-              </label>
-            </div>
-
+          <div className="contact-row">
             <label className="field">
-              <span>Message</span>
-              <textarea name="message" required rows={6} placeholder="Ton message..." />
+              <span>Nom</span>
+              <input name="name" required placeholder="Ton nom" />
             </label>
 
-            <div className="row" style={{ marginTop: 12 }}>
-              <button className="btn primary" type="submit" disabled={status === "sending"}>
-                {status === "sending" ? "Envoi..." : "Envoyer"}
-              </button>
+            <label className="field">
+              <span>Email</span>
+              <input name="email" type="email" required placeholder="ton@email.com" />
+            </label>
+          </div>
 
-              <a className="btn" href="mailto:enzo.castetbon@proton.me">
-                Ou par email
-              </a>
-            </div>
-          </form>
-        </div>
+          <label className="field">
+            <span>Message</span>
+            <textarea name="message" required rows={6} placeholder="Ton message..." />
+          </label>
+
+          <div className="row contact-form-actions">
+            <button className="btn primary" type="submit" disabled={status === "sending"}>
+              {status === "sending" ? "Envoi..." : "Envoyer"}
+            </button>
+
+            <a className="btn" href="mailto:enzo.castetbon@proton.me">
+              Ou par email
+            </a>
+          </div>
+        </form>
       </section>
     </section>
   );

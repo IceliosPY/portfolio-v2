@@ -1,6 +1,8 @@
 /* CONTACT */
 .contact-form{ margin-top: 14px; }
 
+.contact-form-actions{ margin-top: 12px; }
+
 .contact-row{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -60,4 +62,5 @@
 }
 
 /* feedback */
-.section-head .hint:not(.warn){ color: #5cffb2; }
+.section-head .hint:not(.warn),
+.home-section-head .hint:not(.warn){ color: #5cffb2; }

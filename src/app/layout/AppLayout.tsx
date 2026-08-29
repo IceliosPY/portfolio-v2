@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import BackgroundVaporwave from "../../components/background/BackgroundVaporwave";
+import HomeSectionNav from "../../components/HomeSectionNav";
 import ScrollToHash from "../../components/ScrollToHash";
 
 function IconGithub(props: { className?: string }) {
@@ -22,8 +23,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
 
-  const navigate = useNavigate();
   const location = useLocation();
+  const isHome = location.pathname === "/";
 
   // dim au scroll
   useEffect(() => {
@@ -62,16 +63,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // Navigation vers les sections de Home, y compris depuis une autre route.
-  const goSection = (hash: string) => {
+  const closeNavigation = () => {
     setMobileNavOpen(false);
-
-    if (location.pathname === "/" && location.hash === hash) {
-      document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });
-      return;
-    }
-
-    navigate({ pathname: "/", hash });
   };
 
   return (
@@ -88,7 +81,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               to="/"
               className="brand"
               aria-label="Accueil"
-              onClick={() => setMobileNavOpen(false)}
+              onClick={closeNavigation}
             >
               <span className="brand-dot" />
               <span>Icelios</span>
@@ -112,26 +105,37 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               aria-label="Navigation principale"
               data-mobile-open={mobileNavOpen ? "true" : "false"}
             >
-              {/* Sections de Home */}
-              <button type="button" className="nav-link-btn" onClick={() => goSection("#apropos")}>
-                À propos
-              </button>
-              <button type="button" className="nav-link-btn" onClick={() => goSection("#projets")}>
+              <NavLink
+                to="/"
+                end
+                className="nav-page-link"
+                onClick={closeNavigation}
+              >
+                Accueil
+              </NavLink>
+
+              <NavLink
+                to="/projects"
+                className="nav-page-link"
+                onClick={closeNavigation}
+              >
                 Projets
-              </button>
-              <button type="button" className="nav-link-btn" onClick={() => goSection("#skills")}>
-                Skills
-              </button>
-              <button type="button" className="nav-link-btn" onClick={() => goSection("#docs")}>
-                Documents
-              </button>
+              </NavLink>
 
               <NavLink
                 to="/experiences"
-                className="nav-link-router"
-                onClick={() => setMobileNavOpen(false)}
+                className="nav-page-link"
+                onClick={closeNavigation}
               >
                 Expériences
+              </NavLink>
+
+              <NavLink
+                to="/cv"
+                className="nav-page-link"
+                onClick={closeNavigation}
+              >
+                CV
               </NavLink>
 
               <a
@@ -157,8 +161,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
+        {isHome ? <HomeSectionNav /> : null}
         <ScrollToHash />
-        <main className="container">{children}</main>
+        <main className={`container${isHome ? " container--home" : ""}`}>{children}</main>
       </div>
     </>
   );
